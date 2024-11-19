@@ -20,9 +20,7 @@ const Weather = () => {
         setError('');
         try {
             // Fetch weather data from your backend API
-            const weatherResponse = await axios.get(
-                `https://weather-backend-ds1s.onrender.com/api/weather?city=${cityName}`
-            );
+            const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
             setWeatherData(weatherResponse.data);
             setCity(weatherResponse.data.city.name);
             setInputCity('');
