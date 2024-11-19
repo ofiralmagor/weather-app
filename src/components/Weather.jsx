@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import WeatherSummary from './WeatherSummary.jsx';
 import WeatherForecast from './WeatherForecast.jsx';
 import HourlyWeather from './HourlyWeather.jsx';
@@ -12,21 +11,36 @@ const Weather = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [city, setCity] = useState(''); 
+    const [city, setCity] = useState('');
     const [showInput, setShowInput] = useState(false);
 
     const fetchWeather = async (cityName) => {
         setLoading(true);
         setError('');
         try {
-            // Fetch weather data from your backend API
-            const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
-            setWeatherData(weatherResponse.data);
-            setCity(weatherResponse.data.city.name);
+            // Step 1: Get the API key from the backend
+            const apiKeyResponse = await fetch('http://localhost:5000/api/key');
+            if (!apiKeyResponse.ok) {
+                throw new Error('Failed to fetch API key from the server.');
+            }
+            const { apiKey } = await apiKeyResponse.json();
+
+            // Step 2: Use the API key to fetch weather data from OpenWeather API
+            const weatherResponse = await fetch(
+                `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`
+            );
+            if (!weatherResponse.ok) {
+                throw new Error(weatherResponse.status === 404 ? 'City not found!' : 'Something went wrong.');
+            }
+            const data = await weatherResponse.json();
+
+            // Step 3: Update state with the fetched weather data
+            setWeatherData(data);
+            setCity(data.city.name);
             setInputCity('');
             setShowInput(false);
         } catch (err) {
-            setError('Failed to fetch weather data.');
+            setError(err.message);
             setWeatherData(null);
         } finally {
             setLoading(false);
@@ -57,32 +71,34 @@ const Weather = () => {
             'overcast clouds': 'bi bi-clouds',
             'extreme rain': 'bi bi-cloud-rain-heavy',
             'dust': 'bi bi-tornado',
-            'moderate rain': 'bi bi-cloud-drizzle'
+            'moderate rain': 'bi bi-cloud-drizzle',
         };
         return iconMap[description] || 'bi bi-question-circle';
     };
 
     const getDailyAverages = (data) => {
         const dailyData = {};
-        data.list.forEach(forecast => {
+        data.list.forEach((forecast) => {
             const date = new Date(forecast.dt * 1000).toLocaleDateString();
+            const currentDayWeather = forecast.weather[0];
             if (!dailyData[date]) {
                 dailyData[date] = {
                     totalTemp: 0,
                     count: 0,
-                    weather: forecast.weather[0].description
+                    weather: currentDayWeather.description,
                 };
             }
             dailyData[date].totalTemp += forecast.main.temp;
             dailyData[date].count++;
         });
 
-        return Object.entries(dailyData).map(([date, { totalTemp, count, weather }]) => ({
-            date,
-            avgTemp: (totalTemp / count).toFixed(1),
-            weather
-        }))
-        .slice(1, 6); // Retrieve forecast for the next 5 days
+        return Object.entries(dailyData)
+            .map(([date, { totalTemp, count, weather }]) => ({
+                date,
+                avgTemp: (totalTemp / count).toFixed(1),
+                weather,
+            }))
+            .slice(1, 6); // Retrieving only forecast for the next 5 days
     };
 
     useEffect(() => {
@@ -108,7 +124,7 @@ const Weather = () => {
                     </button>
                 </form>
             )}
-            
+
             {loading && <div className="spinner"></div>}
             {error && <p className="error-message">{error}</p>}
             {weatherData && (
