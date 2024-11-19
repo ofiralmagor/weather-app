@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import WeatherSummary from './WeatherSummary.jsx';
 import WeatherForecast from './WeatherForecast.jsx';
 import HourlyWeather from './HourlyWeather.jsx';
@@ -11,26 +12,23 @@ const Weather = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [city, setCity] = useState('');
+    const [city, setCity] = useState(''); 
     const [showInput, setShowInput] = useState(false);
-
-    const apiKey = import.meta.env.VITE_API_KEY;
 
     const fetchWeather = async (cityName) => {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
-            if (!response.ok) {
-                throw new Error(response.status === 404 ? 'City not found!' : 'Something went wrong.');
-            }
-            const data = await response.json();
-            setWeatherData(data);
-            setCity(data.city.name);
+            // Fetch weather data from your backend API
+            const weatherResponse = await axios.get(
+                `http://localhost:5000/api/weather?city=${cityName}`
+            );
+            setWeatherData(weatherResponse.data);
+            setCity(weatherResponse.data.city.name);
             setInputCity('');
-            setShowInput(false); 
+            setShowInput(false);
         } catch (err) {
-            setError(err.message);
+            setError('Failed to fetch weather data.');
             setWeatherData(null);
         } finally {
             setLoading(false);
@@ -70,12 +68,11 @@ const Weather = () => {
         const dailyData = {};
         data.list.forEach(forecast => {
             const date = new Date(forecast.dt * 1000).toLocaleDateString();
-            const currentDayWeather = forecast.weather[0]
             if (!dailyData[date]) {
                 dailyData[date] = {
                     totalTemp: 0,
                     count: 0,
-                    weather: currentDayWeather.description
+                    weather: forecast.weather[0].description
                 };
             }
             dailyData[date].totalTemp += forecast.main.temp;
@@ -87,12 +84,11 @@ const Weather = () => {
             avgTemp: (totalTemp / count).toFixed(1),
             weather
         }))
-        //  retrieving only forecast for the next 5 days
-        .slice(1, 6);
+        .slice(1, 6); // Retrieve forecast for the next 5 days
     };
 
     useEffect(() => {
-        fetchWeather('Tel Aviv'); 
+        fetchWeather('Tel Aviv');
     }, []);
 
     return (
@@ -120,7 +116,7 @@ const Weather = () => {
             {weatherData && (
                 <>
                     <WeatherSummary weatherData={weatherData} getWeatherIcon={getWeatherIcon} />
-                    <HourlyWeather city={city} getWeatherIcon={getWeatherIcon} apiKey={apiKey} />
+                    <HourlyWeather city={city} getWeatherIcon={getWeatherIcon} />
                     <WeatherForecast dailyAverages={getDailyAverages(weatherData)} getWeatherIcon={getWeatherIcon} />
                 </>
             )}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import './HourlyWeather.css';
 
-const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
+const HourlyWeather = ({ city, getWeatherIcon }) => {
     const [hourlyData, setHourlyData] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -13,26 +14,23 @@ const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
             setLoading(true);
             setError('');
             try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
-                if (!response.ok) {
-                    throw new Error('Unable to fetch hourly data.');
-                }
-                const data = await response.json();
+                // Fetch hourly weather data from the backend
+                const response = await axios.get(`http://localhost:5000/api/weather?city=${city}`);
                 const today = new Date().toISOString().split('T')[0];
-                const hourlyForecast = data.list.filter(forecast => {
+                const hourlyForecast = response.data.list.filter(forecast => {
                     const forecastDate = new Date(forecast.dt * 1000).toISOString().split('T')[0];
-                    return forecastDate === today; 
+                    return forecastDate === today;
                 });
                 setHourlyData(hourlyForecast);
             } catch (err) {
-                setError(err.message);
+                setError(err.response?.data?.message || err.message || 'Unable to fetch hourly data.');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchHourlyWeather();
-    }, [city]); 
+    }, [city]); // Re-run effect when city changes
 
     return (
         <div className="hourly-weather">
@@ -55,6 +53,5 @@ const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
         </div>
     );
 };
-
 
 export default HourlyWeather;
