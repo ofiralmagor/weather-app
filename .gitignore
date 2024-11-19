@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 # Logs
-=======
 
->>>>>>> a49df4e (Initial commit with backend integration)
 logs
 *.log
 npm-debug.log*
@@ -11,14 +8,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-<<<<<<< HEAD
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
-=======
+
 node_modules/
 dist/
 .env
@@ -26,7 +21,6 @@ dist-ssr
 *.local
 
 
->>>>>>> a49df4e (Initial commit with backend integration)
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -36,7 +30,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-<<<<<<< HEAD
 .env
-=======
->>>>>>> a49df4e (Initial commit with backend integration)
+.env-עותק
+
+
