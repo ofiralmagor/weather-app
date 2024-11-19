@@ -2,24 +2,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HourlyWeather.css';
 
-<<<<<<< HEAD
 const HourlyWeather = ({ city, getWeatherIcon }) => {
-=======
-<<<<<<< HEAD
-const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
-=======
-const HourlyWeather = ({ city }) => {
->>>>>>> a49df4e (Initial commit with backend integration)
->>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
     const [hourlyData, setHourlyData] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-<<<<<<< HEAD
-=======
-    const apiKey = import.meta.env.VITE_API_KEY;
-
->>>>>>> a49df4e (Initial commit with backend integration)
     useEffect(() => {
         const fetchHourlyWeather = async () => {
             if (!city) return;
@@ -67,25 +54,4 @@ const HourlyWeather = ({ city }) => {
     );
 };
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-const getWeatherIcon = (description) => {
-    const iconMap = {
-        'clear sky': 'bi bi-sun',
-        'few clouds': 'bi bi-cloud-sun',
-        'scattered clouds': 'bi bi-cloud',
-        'broken clouds': 'bi bi-clouds',
-        'shower rain': 'bi bi-cloud-drizzle',
-        'rain': 'bi bi-cloud-rain',
-        'thunderstorm': 'bi bi-cloud-lightning',
-        'snow': 'bi bi-snow',
-        'mist': 'bi bi-cloud-fog',
-    };
-    return iconMap[description] || 'bi bi-question-circle';
-};
->>>>>>> a49df4e (Initial commit with backend integration)
-
->>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
 export default HourlyWeather;
