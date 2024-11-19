@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000; // Backend will run on port 5000
 
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors({
-    origin: 'https://weather-app-ds1s.onrender.com',  // Replace with your frontend's URL
+    origin: 'https://weather-app-ds1s.onrender.com',  // Frontend URL
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));

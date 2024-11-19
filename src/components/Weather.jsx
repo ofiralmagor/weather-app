@@ -21,7 +21,7 @@ const Weather = () => {
         try {
             // Fetch weather data from your backend API
             const weatherResponse = await axios.get(
-                `http://localhost:5000/api/weather?city=${cityName}`
+                `https://weather-backend-ds1s.onrender.com/api/weather?city=${cityName}`
             );
             setWeatherData(weatherResponse.data);
             setCity(weatherResponse.data.city.name);

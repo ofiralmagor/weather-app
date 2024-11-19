@@ -14,8 +14,7 @@ const HourlyWeather = ({ city, getWeatherIcon }) => {
             setLoading(true);
             setError('');
             try {
-                // Fetch hourly weather data from the backend
-                const response = await axios.get(`http://localhost:5000/api/weather?city=${city}`);
+                const response = await axios.get(`https://weather-backend-ds1s.onrender.com/api/weather?city=${city}`);
                 const today = new Date().toISOString().split('T')[0];
                 const hourlyForecast = response.data.list.filter(forecast => {
                     const forecastDate = new Date(forecast.dt * 1000).toISOString().split('T')[0];
