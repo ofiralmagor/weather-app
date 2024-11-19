@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Weather App 
 
 This Weather App is a dynamic, responsive web application built using React. It fetches weather data from the OpenWeatherMap API to display current and forecasted weather conditions. Users can search for weather data by city, view hourly weather updates, and see a 5-day forecast.
@@ -46,34 +46,3 @@ This Weather App is a dynamic, responsive web application built using React. It 
 
 ---
 
-## File Structure 📂
-
-```plaintext
-├── public/                    # Public assets (e.g., icons, images)
-├── src/
-│   ├── components/
-│   │   ├── Weather.jsx         # Main weather component
-│   │   ├── WeatherSummary.jsx  # Displays current weather
-│   │   ├── HourlyWeather.jsx   # Displays hourly forecast
-│   │   ├── WeatherForecast.jsx # Displays 5-day forecast
-│   ├── App.css                 # Global styles
-│   ├── App.jsx                 # Main app file
-│   └── index.jsx               # Entry point for React
-├── .env                        # Environment variables (API key)
-├── package.json                # Project dependencies
-├── vite.config.js              # Vite configuration
-└── README.md                   # Documentation
-=======
-# Weather App
-
-
-Weather App
-This Weather App is a React-based application that provides weather forecasts for various locations. It displays a 5-day weather forecast, hourly weather updates, and a weather summary for a selected city. Users can search for specific locations and view relevant weather details with a clean and responsive user interface.
-
-Default Weather Display: Displays the weather for Tel Aviv upon the first load.
-Search for Locations: Users can toggle a search input to find weather forecasts for other cities.
-Dynamic Weather Icons: Utilizes Bootstrap icons to represent different weather conditions visually.
-Forecast Overview: Includes daily average temperatures, humidity, wind speed, and a summary of weather conditions.
-Hourly Weather Updates: Provides detailed hourly weather information for the selected city.
-Responsive Design: Optimized for desktop and mobile devices.
->>>>>>> a49df4e (Initial commit with backend integration)
