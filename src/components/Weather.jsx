@@ -14,7 +14,15 @@ const Weather = () => {
     const [loading, setLoading] = useState(false);
     const [city, setCity] = useState(''); 
     const [showInput, setShowInput] = useState(false);
+<<<<<<< HEAD
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> a49df4e (Initial commit with backend integration)
+    const apiKey = import.meta.env.VITE_API_KEY;
+
+>>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
     const fetchWeather = async (cityName) => {
         setLoading(true);
         setError('');
@@ -55,11 +63,14 @@ const Weather = () => {
             'thunderstorm': 'bi bi-cloud-lightning',
             'snow': 'bi bi-snow',
             'mist': 'bi bi-cloud-fog',
+<<<<<<< HEAD
             'light rain': 'bi bi-cloud-drizzle',
             'overcast clouds': 'bi bi-clouds',
             'extreme rain': 'bi bi-cloud-rain-heavy',
             'dust': 'bi bi-tornado',
             'moderate rain': 'bi bi-cloud-drizzle'
+=======
+>>>>>>> a49df4e (Initial commit with backend integration)
         };
         return iconMap[description] || 'bi bi-question-circle';
     };
@@ -68,11 +79,26 @@ const Weather = () => {
         const dailyData = {};
         data.list.forEach(forecast => {
             const date = new Date(forecast.dt * 1000).toLocaleDateString();
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            const currentDayWeather = forecast.weather[0]
+=======
+>>>>>>> a49df4e (Initial commit with backend integration)
+>>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
             if (!dailyData[date]) {
                 dailyData[date] = {
                     totalTemp: 0,
                     count: 0,
+<<<<<<< HEAD
                     weather: forecast.weather[0].description
+=======
+<<<<<<< HEAD
+                    weather: currentDayWeather.description
+=======
+                    weather: forecast.weather[0].description
+>>>>>>> a49df4e (Initial commit with backend integration)
+>>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
                 };
             }
             dailyData[date].totalTemp += forecast.main.temp;
@@ -83,8 +109,17 @@ const Weather = () => {
             date,
             avgTemp: (totalTemp / count).toFixed(1),
             weather
+<<<<<<< HEAD
         }))
+<<<<<<< HEAD
         .slice(1, 6); // Retrieve forecast for the next 5 days
+=======
+        //  retrieving only forecast for the next 5 days
+        .slice(1, 6);
+=======
+        })).slice(1, 6);
+>>>>>>> a49df4e (Initial commit with backend integration)
+>>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
     };
 
     useEffect(() => {
@@ -116,7 +151,15 @@ const Weather = () => {
             {weatherData && (
                 <>
                     <WeatherSummary weatherData={weatherData} getWeatherIcon={getWeatherIcon} />
+<<<<<<< HEAD
                     <HourlyWeather city={city} getWeatherIcon={getWeatherIcon} />
+=======
+<<<<<<< HEAD
+                    <HourlyWeather city={city} getWeatherIcon={getWeatherIcon} apiKey={apiKey} />
+=======
+                    <HourlyWeather city={city} />
+>>>>>>> a49df4e (Initial commit with backend integration)
+>>>>>>> e4c4ae7aa9a8897174556bba597382b03497bbef
                     <WeatherForecast dailyAverages={getDailyAverages(weatherData)} getWeatherIcon={getWeatherIcon} />
                 </>
             )}
