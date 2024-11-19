@@ -57,6 +57,11 @@ const Weather = () => {
             'thunderstorm': 'bi bi-cloud-lightning',
             'snow': 'bi bi-snow',
             'mist': 'bi bi-cloud-fog',
+            'light rain': 'bi bi-cloud-drizzle',
+            'overcast clouds': 'bi bi-clouds',
+            'extreme rain': 'bi bi-cloud-rain-heavy',
+            'dust': 'bi bi-tornado',
+            'moderate rain': 'bi bi-cloud-drizzle'
         };
         return iconMap[description] || 'bi bi-question-circle';
     };
@@ -65,11 +70,12 @@ const Weather = () => {
         const dailyData = {};
         data.list.forEach(forecast => {
             const date = new Date(forecast.dt * 1000).toLocaleDateString();
+            const currentDayWeather = forecast.weather[0]
             if (!dailyData[date]) {
                 dailyData[date] = {
                     totalTemp: 0,
                     count: 0,
-                    weather: forecast.weather[0].description
+                    weather: currentDayWeather.description
                 };
             }
             dailyData[date].totalTemp += forecast.main.temp;
@@ -80,7 +86,9 @@ const Weather = () => {
             date,
             avgTemp: (totalTemp / count).toFixed(1),
             weather
-        })).slice(1, 6);
+        }))
+        //  retrieving only forecast for the next 5 days
+        .slice(1, 6);
     };
 
     useEffect(() => {
