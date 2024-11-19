@@ -10,7 +10,8 @@ const PORT = process.env.PORT || 5000; // Backend will run on port 5000
 
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors({
-    origin: '*'
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
 }));
 
 // Define an endpoint to fetch weather data
@@ -19,8 +20,9 @@ app.get('/api/weather', async (req, res) => {
     const apiKey = process.env.OPENWEATHER_API_KEY;
 
     try {
-        const weatherResponse = await axios.get('https://weather-app-ds1s.onrender.com/api/weather');
-
+        const weatherResponse = await axios.get(
+            `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`
+        );
         res.json(weatherResponse.data);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch weather data' });

@@ -12,17 +12,20 @@ const Weather = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [city, setCity] = useState(''); 
+    const [city, setCity] = useState('');
     const [showInput, setShowInput] = useState(false);
+
+
+    const apiBaseUrl = process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:5000/api/weather'  
+        : 'https://weather-app-ds1s.onrender.com/api/weather'; 
 
     const fetchWeather = async (cityName) => {
         setLoading(true);
         setError('');
         try {
-            // Fetch weather data from your backend API
-            const weatherResponse = await axios.get(
-                `http://localhost:5000/api/weather?city=${cityName}`
-            );
+            
+            const weatherResponse = await axios.get(`${apiBaseUrl}?city=${cityName}`);
             setWeatherData(weatherResponse.data);
             setCity(weatherResponse.data.city.name);
             setInputCity('');

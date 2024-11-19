@@ -7,6 +7,10 @@ const HourlyWeather = ({ city, getWeatherIcon }) => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const apiBaseUrl = process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:5000/api/weather'  
+        : 'https://weather-app-ds1s.onrender.com/api/weather'; 
+
     useEffect(() => {
         const fetchHourlyWeather = async () => {
             if (!city) return;
@@ -15,7 +19,7 @@ const HourlyWeather = ({ city, getWeatherIcon }) => {
             setError('');
             try {
                 // Fetch hourly weather data from the backend
-                const response = await axios.get(`http://localhost:5000/api/weather?city=${city}`);
+                const response = await axios.get(`${apiBaseUrl}?city=${city}`);
                 const today = new Date().toISOString().split('T')[0];
                 const hourlyForecast = response.data.list.filter(forecast => {
                     const forecastDate = new Date(forecast.dt * 1000).toISOString().split('T')[0];
