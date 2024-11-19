@@ -1,8 +1,64 @@
-# React + Vite
+# Weather App 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This Weather App is a dynamic, responsive web application built using React. It fetches weather data from the OpenWeatherMap API to display current and forecasted weather conditions. Users can search for weather data by city, view hourly weather updates, and see a 5-day forecast.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features 
+
+- **City Search**: Search for weather details of any city.
+- **Current Weather**: Displays temperature, weather description, and icon.
+- **Hourly Weather Forecast**: Shows hourly weather for the selected city.
+- **5-Day Forecast**: Displays average temperature and weather icons for the next 5 days.
+- **Responsive Design**: Fully optimized for desktop, tablet, and mobile devices.
+- **Toggle Input**: Hide or show the search input dynamically.
+
+---
+
+## Technologies Used 
+
+- **Frontend**: React, CSS
+- **API**: [OpenWeatherMap API](https://openweathermap.org/)
+- **Icons**: Bootstrap Icons (for weather symbols)
+
+---
+
+## Installation 
+
+### Prerequisites
+- Node.js installed on your machine
+- OpenWeatherMap API key
+
+
+## Usage 
+
+1. **Search for a City**:
+   - Click the search button to toggle the input field.
+   - Enter a city name and press the search icon or hit "Enter".
+
+2. **View Weather Details**:
+   - The app fetches weather data for the selected city.
+   - View current weather conditions, hourly weather updates, and a 5-day forecast.
+
+3. **Responsive Layout**:
+   - Enjoy a seamless experience on mobile, tablet, and desktop screens.
+
+---
+
+## File Structure 📂
+
+```plaintext
+├── public/                    # Public assets (e.g., icons, images)
+├── src/
+│   ├── components/
+│   │   ├── Weather.jsx         # Main weather component
+│   │   ├── WeatherSummary.jsx  # Displays current weather
+│   │   ├── HourlyWeather.jsx   # Displays hourly forecast
+│   │   ├── WeatherForecast.jsx # Displays 5-day forecast
+│   ├── App.css                 # Global styles
+│   ├── App.jsx                 # Main app file
+│   └── index.jsx               # Entry point for React
+├── .env                        # Environment variables (API key)
+├── package.json                # Project dependencies
+├── vite.config.js              # Vite configuration
+└── README.md                   # Documentation
