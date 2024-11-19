@@ -1,6 +1,10 @@
 import './App.css';
 import Weather from './components/Weather.jsx';
+<<<<<<< HEAD
 import logo from '/logo.jpg';
+=======
+import logo from '/logo.jpeg';
+>>>>>>> a49df4e (Initial commit with backend integration)
 
 function App() {
   return (
