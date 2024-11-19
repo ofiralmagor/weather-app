@@ -6,7 +6,7 @@ import axios from 'axios';
 dotenv.config(); // Load environment variables from .env
 
 const app = express();
-const PORT = 5000; // Backend will run on port 5000
+const PORT = process.env.PORT || 5000; // Backend will run on port 5000
 
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
