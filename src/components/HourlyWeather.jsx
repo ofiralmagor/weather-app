@@ -1,43 +1,34 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import './HourlyWeather.css';
-
-const HourlyWeather = ({ city, getWeatherIcon }) => {
+const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
     const [hourlyData, setHourlyData] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         const fetchHourlyWeather = async () => {
             if (!city) return;
-
             setLoading(true);
             setError('');
             try {
-                // Fetch the API key from the backend
-                const keyResponse = await axios.get('http://localhost:5000/api/key');
-                const apiKey = keyResponse.data.apiKey;
-
-                // Fetch hourly weather data using the retrieved API key
-                const response = await axios.get(
-                    `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`
-                );
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
+                if (!response.ok) {
+                    throw new Error('Unable to fetch hourly data.');
+                }
+                const data = await response.json();
                 const today = new Date().toISOString().split('T')[0];
-                const hourlyForecast = response.data.list.filter(forecast => {
+                const hourlyForecast = data.list.filter(forecast => {
                     const forecastDate = new Date(forecast.dt * 1000).toISOString().split('T')[0];
                     return forecastDate === today; 
                 });
                 setHourlyData(hourlyForecast);
             } catch (err) {
-                setError(err.response?.data?.message || err.message || 'Unable to fetch hourly data.');
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchHourlyWeather();
-    }, [city]); // Re-run effect when city changes
-
+    }, [city]); 
     return (
         <div className="hourly-weather">
             {loading && <div className="spinner"></div>}
@@ -59,5 +50,4 @@ const HourlyWeather = ({ city, getWeatherIcon }) => {
         </div>
     );
 };
-
 export default HourlyWeather;

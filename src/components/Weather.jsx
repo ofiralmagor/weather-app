@@ -14,31 +14,21 @@ const Weather = () => {
     const [city, setCity] = useState('');
     const [showInput, setShowInput] = useState(false);
 
+    const apiKey = import.meta.env.VITE_API_KEY;
+
     const fetchWeather = async (cityName) => {
         setLoading(true);
         setError('');
         try {
-            // Step 1: Get the API key from the backend
-            const apiKeyResponse = await fetch('http://localhost:5000/api/key');
-            if (!apiKeyResponse.ok) {
-                throw new Error('Failed to fetch API key from the server.');
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
+            if (!response.ok) {
+                throw new Error(response.status === 404 ? 'City not found!' : 'Something went wrong.');
             }
-            const { apiKey } = await apiKeyResponse.json();
-
-            // Step 2: Use the API key to fetch weather data from OpenWeather API
-            const weatherResponse = await fetch(
-                `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`
-            );
-            if (!weatherResponse.ok) {
-                throw new Error(weatherResponse.status === 404 ? 'City not found!' : 'Something went wrong.');
-            }
-            const data = await weatherResponse.json();
-
-            // Step 3: Update state with the fetched weather data
+            const data = await response.json();
             setWeatherData(data);
             setCity(data.city.name);
             setInputCity('');
-            setShowInput(false);
+            setShowInput(false); 
         } catch (err) {
             setError(err.message);
             setWeatherData(null);
@@ -71,7 +61,7 @@ const Weather = () => {
             'overcast clouds': 'bi bi-clouds',
             'extreme rain': 'bi bi-cloud-rain-heavy',
             'dust': 'bi bi-tornado',
-            'moderate rain': 'bi bi-cloud-drizzle',
+            'moderate rain': 'bi bi-cloud-drizzle'
         };
         return iconMap[description] || 'bi bi-question-circle';
     };
@@ -110,7 +100,6 @@ const Weather = () => {
             <button className="toggle-button" onClick={() => setShowInput(!showInput)}>
                 <i className={showInput ? 'bi bi-x-lg' : 'bi bi-search'}></i>
             </button>
-
             {showInput && (
                 <form onSubmit={handleSubmit}>
                     <input
@@ -124,18 +113,17 @@ const Weather = () => {
                     </button>
                 </form>
             )}
-
+            
             {loading && <div className="spinner"></div>}
             {error && <p className="error-message">{error}</p>}
             {weatherData && (
                 <>
                     <WeatherSummary weatherData={weatherData} getWeatherIcon={getWeatherIcon} />
-                    <HourlyWeather city={city} getWeatherIcon={getWeatherIcon} />
+                    <HourlyWeather city={city} getWeatherIcon={getWeatherIcon} apiKey={apiKey} />
                     <WeatherForecast dailyAverages={getDailyAverages(weatherData)} getWeatherIcon={getWeatherIcon} />
                 </>
             )}
         </div>
     );
 };
-
 export default Weather;
