@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios'; // ייבוא Axios
 import WeatherSummary from './WeatherSummary.jsx';
 import WeatherForecast from './WeatherForecast.jsx';
 import HourlyWeather from './HourlyWeather.jsx';
@@ -13,24 +14,40 @@ const Weather = () => {
     const [loading, setLoading] = useState(false);
     const [city, setCity] = useState('');
     const [showInput, setShowInput] = useState(false);
+    const [apiKey, setApiKey] = useState(''); // מצב חדש לאחסון ה-API Key
 
-    const apiKey = import.meta.env.VITE_API_KEY;
+    // Fetch the API key from your server
+    useEffect(() => {
+        const fetchApiKey = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/key'); // שליחת בקשה לשרת 
+                setApiKey(response.data.apiKey); // אחסון ה-API Key
+            } catch (err) {
+                console.error('Error fetching API Key:', err);
+                setError('Failed to fetch API Key.');
+            }
+        };
+
+        fetchApiKey();
+    }, []);
 
     const fetchWeather = async (cityName) => {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
-            if (!response.ok) {
-                throw new Error(response.status === 404 ? 'City not found!' : 'Something went wrong.');
-            }
-            const data = await response.json();
-            setWeatherData(data);
-            setCity(data.city.name);
+            const response = await axios.get(`https://api.openweathermap.org/data/2.5/forecast`, {
+                params: {
+                    q: cityName,
+                    appid: apiKey, // שימוש ב-API Key שקיבלנו מהשרת
+                    units: 'metric',
+                },
+            });
+            setWeatherData(response.data);
+            setCity(response.data.city.name);
             setInputCity('');
             setShowInput(false); 
         } catch (err) {
-            setError(err.message);
+            setError(err.response?.status === 404 ? 'City not found!' : 'Something went wrong.');
             setWeatherData(null);
         } finally {
             setLoading(false);
@@ -61,7 +78,7 @@ const Weather = () => {
             'overcast clouds': 'bi bi-clouds',
             'extreme rain': 'bi bi-cloud-rain-heavy',
             'dust': 'bi bi-tornado',
-            'moderate rain': 'bi bi-cloud-drizzle'
+            'moderate rain': 'bi bi-cloud-drizzle',
         };
         return iconMap[description] || 'bi bi-question-circle';
     };
@@ -92,8 +109,10 @@ const Weather = () => {
     };
 
     useEffect(() => {
-        fetchWeather('Tel Aviv');
-    }, []);
+        if (apiKey) { // מחכים לטעינת ה-API Key לפני בקשת מזג האוויר
+            fetchWeather('Tel Aviv');
+        }
+    }, [apiKey]);
 
     return (
         <div>
@@ -126,4 +145,5 @@ const Weather = () => {
         </div>
     );
 };
+
 export default Weather;

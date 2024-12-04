@@ -1,34 +1,46 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios'; // ייבוא Axios
 import './HourlyWeather.css';
+
 const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
     const [hourlyData, setHourlyData] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchHourlyWeather = async () => {
             if (!city) return;
             setLoading(true);
             setError('');
+
             try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
-                if (!response.ok) {
-                    throw new Error('Unable to fetch hourly data.');
-                }
-                const data = await response.json();
-                const today = new Date().toISOString().split('T')[0];
-                const hourlyForecast = data.list.filter(forecast => {
-                    const forecastDate = new Date(forecast.dt * 1000).toISOString().split('T')[0];
-                    return forecastDate === today; 
+                const response = await axios.get('https://api.openweathermap.org/data/2.5/forecast', {
+                    params: {
+                        q: city,
+                        appid: apiKey, // שימוש ב-API Key שהועבר כפרופס
+                        units: 'metric',
+                    },
                 });
+                const data = response.data;
+
+                // סינון התחזיות רק להיום
+                const today = new Date().toISOString().split('T')[0];
+                const hourlyForecast = data.list.filter((forecast) => {
+                    const forecastDate = new Date(forecast.dt * 1000).toISOString().split('T')[0];
+                    return forecastDate === today;
+                });
+
                 setHourlyData(hourlyForecast);
             } catch (err) {
-                setError(err.message);
+                setError(err.response?.data?.message || 'Unable to fetch hourly data.');
             } finally {
                 setLoading(false);
             }
         };
+
         fetchHourlyWeather();
-    }, [city]); 
+    }, [city, apiKey]); // עדכון השימוש ב-apiKey וה-city 
+
     return (
         <div className="hourly-weather">
             {loading && <div className="spinner"></div>}
@@ -50,4 +62,5 @@ const HourlyWeather = ({ city, getWeatherIcon, apiKey }) => {
         </div>
     );
 };
+
 export default HourlyWeather;
